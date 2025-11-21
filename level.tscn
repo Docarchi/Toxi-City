@@ -1,0 +1,87 @@
+[gd_scene load_steps=9 format=4 uid="uid://dfl55mo2hke0b"]
+
+[ext_resource type="Script" uid="uid://cwt734fgly1ax" path="res://level.gd" id="1_vonw3"]
+[ext_resource type="Texture2D" uid="uid://boj11k6hlkk60" path="res://assets/tiles.png" id="2_vonw3"]
+[ext_resource type="Script" uid="uid://drnd62e750lgn" path="res://label_timer.gd" id="3_0b4ue"]
+[ext_resource type="Script" uid="uid://ms50sow1foey" path="res://pb_toxicity_level.gd" id="3_oi3di"]
+[ext_resource type="AudioStream" uid="uid://djd4cwp1w23xn" path="res://assets/punch-deck-brazilian-street-fight(chosic.com).mp3" id="5_f2txt"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_oi3di"]
+texture = ExtResource("2_vonw3")
+margins = Vector2i(5, 5)
+separation = Vector2i(10, 10)
+texture_region_size = Vector2i(252, 216)
+0:0/0 = 0
+1:0/0 = 0
+1:0/0/custom_data_0 = 1
+1:0/0/custom_data_1 = true
+1:1/0 = 0
+1:1/0/custom_data_1 = true
+0:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_oi3di"]
+tile_shape = 3
+tile_offset_axis = 1
+tile_size = Vector2i(252, 216)
+custom_data_layer_0/name = "type"
+custom_data_layer_0/type = 2
+custom_data_layer_1/name = "toxic"
+custom_data_layer_1/type = 1
+sources/0 = SubResource("TileSetAtlasSource_oi3di")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f2txt"]
+bg_color = Color(0.14902, 0.470588, 0.25098, 1)
+corner_radius_top_right = 5
+corner_radius_bottom_right = 6
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_vonw3")
+
+[node name="map_tiles" type="TileMapLayer" parent="."]
+scale = Vector2(0.25, 0.25)
+tile_map_data = PackedByteArray("AAALAAMAAAAAAAAAAAAKAAUAAAAAAAAAAAAMAAUAAAABAAEAAAANAAUAAAAAAAAAAAAKAAQAAAAAAAAAAAAMAAQAAAAAAAAAAAALAAUAAAAAAAAAAAAKAAYAAAAAAAAAAAALAAYAAAAAAAAAAAAMAAYAAAAAAAAAAAANAAQAAAAAAAAAAAANAAMAAAAAAAAAAAAMAAMAAAAAAAAAAAALAAQAAAAAAAAAAAAOAAQAAAAAAAAAAAAOAAUAAAAAAAAAAAAOAAYAAAAAAAAAAAANAAYAAAAAAAAAAAAMAAcAAAAAAAAAAAA=")
+tile_set = SubResource("TileSet_oi3di")
+
+[node name="Toxi_Propagation" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[node name="Timer_left" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[node name="music_game" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_f2txt")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+offset_top = 30.0
+offset_right = 1151.0
+offset_bottom = 80.0
+theme_override_constants/separation = 155
+alignment = 1
+
+[node name="label_nb_heal" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Pb_toxicity_level" type="ProgressBar" parent="HBoxContainer"]
+custom_minimum_size = Vector2(500, 50)
+layout_mode = 2
+theme_override_styles/fill = SubResource("StyleBoxFlat_f2txt")
+value = 5.0
+show_percentage = false
+script = ExtResource("3_oi3di")
+
+[node name="label_timer" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("3_0b4ue")
+
+[connection signal="timeout" from="Timer_left" to="." method="_on_timer_left_timeout"]
+[connection signal="value_changed" from="HBoxContainer/Pb_toxicity_level" to="." method="_on_pb_toxicity_level_value_changed"]
