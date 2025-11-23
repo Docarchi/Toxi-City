@@ -1,10 +1,13 @@
-[gd_scene load_steps=9 format=4 uid="uid://dfl55mo2hke0b"]
+[gd_scene load_steps=14 format=4 uid="uid://dfl55mo2hke0b"]
 
 [ext_resource type="Script" uid="uid://cwt734fgly1ax" path="res://level.gd" id="1_vonw3"]
 [ext_resource type="Texture2D" uid="uid://boj11k6hlkk60" path="res://assets/tiles.png" id="2_vonw3"]
 [ext_resource type="Script" uid="uid://drnd62e750lgn" path="res://label_timer.gd" id="3_0b4ue"]
 [ext_resource type="Script" uid="uid://ms50sow1foey" path="res://pb_toxicity_level.gd" id="3_oi3di"]
+[ext_resource type="Texture2D" uid="uid://dhnpel4oi7sj0" path="res://assets/wounded-heart_b.png" id="4_km5ld"]
 [ext_resource type="AudioStream" uid="uid://djd4cwp1w23xn" path="res://assets/punch-deck-brazilian-street-fight(chosic.com).mp3" id="5_f2txt"]
+[ext_resource type="Texture2D" uid="uid://cglhgrnauge7r" path="res://assets/virus_b.png" id="5_i2t4f"]
+[ext_resource type="Texture2D" uid="uid://bwg6frxu3dwhn" path="res://assets/hourglass_b.png" id="5_n6hdu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_oi3di"]
 texture = ExtResource("2_vonw3")
@@ -30,16 +33,23 @@ custom_data_layer_1/type = 1
 sources/0 = SubResource("TileSetAtlasSource_oi3di")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f2txt"]
-bg_color = Color(0.14902, 0.470588, 0.25098, 1)
+bg_color = Color(0.168627, 0.803922, 0.376471, 1)
 corner_radius_top_right = 5
 corner_radius_bottom_right = 6
+
+[sub_resource type="Gradient" id="Gradient_km5ld"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.301961, 0.419608, 0.301961, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_i2t4f"]
+gradient = SubResource("Gradient_km5ld")
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1_vonw3")
 
 [node name="map_tiles" type="TileMapLayer" parent="."]
 scale = Vector2(0.25, 0.25)
-tile_map_data = PackedByteArray("AAALAAMAAAAAAAAAAAAKAAUAAAAAAAAAAAAMAAUAAAABAAEAAAANAAUAAAAAAAAAAAAKAAQAAAAAAAAAAAAMAAQAAAAAAAAAAAALAAUAAAAAAAAAAAAKAAYAAAAAAAAAAAALAAYAAAAAAAAAAAAMAAYAAAAAAAAAAAANAAQAAAAAAAAAAAANAAMAAAAAAAAAAAAMAAMAAAAAAAAAAAALAAQAAAAAAAAAAAAOAAQAAAAAAAAAAAAOAAUAAAAAAAAAAAAOAAYAAAAAAAAAAAANAAYAAAAAAAAAAAAMAAcAAAAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAAKAAUAAAAAAAAAAAAMAAUAAAAAAAAAAAANAAUAAAAAAAAAAAAMAAQAAAAAAAAAAAALAAUAAAAAAAAAAAAKAAYAAAAAAAAAAAALAAYAAAAAAAAAAAAMAAYAAAABAAEAAAANAAQAAAAAAAAAAAALAAQAAAAAAAAAAAAOAAUAAAAAAAAAAAAOAAYAAAAAAAAAAAANAAYAAAAAAAAAAAAMAAcAAAAAAAAAAAAKAAcAAAAAAAAAAAALAAcAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAcAAAAAAAAAAAAOAAcAAAAAAAAAAAA=")
 tile_set = SubResource("TileSet_oi3di")
 
 [node name="Toxi_Propagation" type="Timer" parent="."]
@@ -52,13 +62,29 @@ autostart = true
 
 [node name="music_game" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_f2txt")
+parameters/looping = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 offset_top = 30.0
-offset_right = 1151.0
+offset_right = 1153.0
 offset_bottom = 80.0
-theme_override_constants/separation = 155
+theme_override_constants/separation = 160
 alignment = 1
+
+[node name="Sprite heal" type="Sprite2D" parent="HBoxContainer"]
+position = Vector2(71, 25)
+scale = Vector2(0.07, 0.07)
+texture = ExtResource("4_km5ld")
+
+[node name="Sprite virus" type="Sprite2D" parent="HBoxContainer"]
+position = Vector2(256, 25)
+scale = Vector2(0.07, 0.07)
+texture = ExtResource("5_i2t4f")
+
+[node name="Sprite timer" type="Sprite2D" parent="HBoxContainer"]
+position = Vector2(925, 25)
+scale = Vector2(0.07, 0.07)
+texture = ExtResource("5_n6hdu")
 
 [node name="label_nb_heal" type="Label" parent="HBoxContainer"]
 layout_mode = 2
@@ -83,5 +109,80 @@ horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("3_0b4ue")
 
+[node name="TextureRect" type="TextureRect" parent="."]
+visible = false
+offset_left = 369.0
+offset_top = 183.0
+offset_right = 823.0
+offset_bottom = 537.0
+texture = SubResource("GradientTexture1D_i2t4f")
+
+[node name="Popup_end" type="VBoxContainer" parent="."]
+visible = false
+offset_left = 369.0
+offset_top = 210.0
+offset_right = 823.0
+offset_bottom = 513.0
+theme_override_constants/separation = 23
+
+[node name="Label_victory" type="Label" parent="Popup_end"]
+layout_mode = 2
+text = "GAME OVER
+
+Toxi-City was completetly contaminated...
+But you help a lot to to postpone the inevitable.
+Toxi-City thanks you !"
+horizontal_alignment = 1
+
+[node name="CenterContainer2" type="CenterContainer" parent="Popup_end"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="Popup_end/CenterContainer2"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="Popup_end/CenterContainer2/GridContainer"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "Time survived :"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="Popup_end/CenterContainer2/GridContainer"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="Popup_end/CenterContainer2/GridContainer"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "Treatments given :"
+vertical_alignment = 1
+
+[node name="Label4" type="Label" parent="Popup_end/CenterContainer2/GridContainer"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="Popup_end"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Popup_end/CenterContainer"]
+layout_mode = 2
+
+[node name="Button_retry" type="Button" parent="Popup_end/CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+text = "Retry"
+
+[node name="Button_back" type="Button" parent="Popup_end/CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+text = "Menu"
+
 [connection signal="timeout" from="Timer_left" to="." method="_on_timer_left_timeout"]
 [connection signal="value_changed" from="HBoxContainer/Pb_toxicity_level" to="." method="_on_pb_toxicity_level_value_changed"]
+[connection signal="pressed" from="Popup_end/CenterContainer/HBoxContainer/Button_retry" to="." method="_on_button_retry_pressed"]
+[connection signal="pressed" from="Popup_end/CenterContainer/HBoxContainer/Button_back" to="." method="_on_button_back_pressed"]

@@ -2,9 +2,9 @@ extends Node2D
 
 @export var p_propagation = 0.6
 var nb_heal = 0
-var x_max = 20
-var x_min = 3
-var y_max = 9
+var x_max = 23
+var x_min = 1
+var y_max = 11
 var y_min = 2
 @onready var label_timer = $HBoxContainer/label_timer
 @onready var label_nb_heal = $HBoxContainer/label_nb_heal
@@ -31,7 +31,6 @@ func _input(event: InputEvent) -> void:
 						pass
 				
 func _process(delta: float) -> void:
-	label_timer.set_text(str($Timer_left.get_time_left()).pad_decimals(1))
 	label_nb_heal.text = str(nb_heal)
 	pb_toxicity.max_value = int(round($map_tiles.get_used_cells().size()*0.75))
 	var nb_toxic = 0
@@ -39,6 +38,8 @@ func _process(delta: float) -> void:
 		if $map_tiles.get_cell_tile_data(tile).get_custom_data("toxic"):
 			nb_toxic += 1
 	pb_toxicity.value = lerp(pb_toxicity.value, float(nb_toxic), delta*3)
+	if Input.is_action_just_pressed("back"):
+		_on_button_back_pressed()
 
 func found_neighbor(coord: Vector2i) -> Array:
 	var delta : Array[Vector2i]
@@ -71,12 +72,17 @@ func _on_pb_toxicity_level_value_changed(value: float) -> void:
 	if pb_toxicity.value == pb_toxicity.max_value:
 		$Toxi_Propagation.stop()
 		label_timer.stop()
-		var victory_scene = load("res://main_menu.tscn")
-		get_tree().change_scene_to_packed(victory_scene)
+		$Timer_left.stop()
+		$Popup_end/CenterContainer2/GridContainer/Label2.text = label_timer.text
+		$Popup_end/CenterContainer2/GridContainer/Label4.text = str(nb_heal)
+		$Popup_end.show()
+		$TextureRect.show()
+		#var victory_scene = load("res://main_menu.tscn")
+		#get_tree().change_scene_to_packed(victory_scene)
 
 
 func _on_timer_left_timeout() -> void:
-	for i in range(3):
+	for i in range(min(round($map_tiles.get_used_cells().size()/6), 6)):
 		add_tile()
 	add_toxicity()
 	
@@ -89,9 +95,24 @@ func add_toxicity():
 func add_tile():
 	var used_cells = $map_tiles.get_used_cells()
 	var nb_cells = used_cells.size()
-	var nb_r = randi_range(1, nb_cells)
-	var neighbors = $map_tiles.get_surrounding_cells(used_cells[nb_r-1])
-	for n in neighbors:
-		if n not in used_cells and n[0] in range(3,20) and n[1] in range(2,9):
-			$map_tiles.set_cell(n, 0, Vector2i(0, 0))
-			break
+	var found = 0
+	var try = 0
+	while found < 1 and try < 200:
+		try += 1
+		var nb_r = randi_range(1, nb_cells)
+		var neighbors = $map_tiles.get_surrounding_cells(used_cells[nb_r-1])
+		for n in neighbors:
+			if n not in used_cells and n[0] in range(x_min,x_max) and n[1] in range(y_min,y_max):
+				$map_tiles.set_cell(n, 0, Vector2i(0, 0))
+				found += 1
+				break
+
+
+func _on_button_retry_pressed() -> void:
+	var path = get_tree().current_scene.scene_file_path
+	get_tree().change_scene_to_file(path)
+
+
+func _on_button_back_pressed() -> void:
+	var path = load("res://main_menu.tscn")
+	get_tree().change_scene_to_packed(path)
