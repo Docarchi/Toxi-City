@@ -9,6 +9,11 @@ var y_min = 2
 @onready var label_timer = $HBoxContainer/label_timer
 @onready var label_nb_heal = $HBoxContainer/label_nb_heal
 @onready var pb_toxicity = $HBoxContainer/Pb_toxicity_level
+var final_text = ["By the way, what's the toxic stuff ?",
+"Could Toxi-City be hiding something ?",
+"This toxic stuff doesn't kill, so why decontaminate ?",
+"It's not toxic, it's just green like... grass ?",
+"Toxi-City demands us to exterminate vegetations !"]
 
 func _ready() -> void:
 	label_timer.start()
@@ -70,6 +75,7 @@ func toxi_propagation():
 
 func _on_pb_toxicity_level_value_changed(value: float) -> void:
 	if pb_toxicity.value == pb_toxicity.max_value:
+		$Popup_end/CenterContainer3/Label1.text = final_text[min(final_text.size()-1, round(nb_heal/45))]
 		$Toxi_Propagation.stop()
 		label_timer.stop()
 		$Timer_left.stop()
@@ -77,8 +83,6 @@ func _on_pb_toxicity_level_value_changed(value: float) -> void:
 		$Popup_end/CenterContainer2/GridContainer/Label4.text = str(nb_heal)
 		$Popup_end.show()
 		$TextureRect.show()
-		#var victory_scene = load("res://main_menu.tscn")
-		#get_tree().change_scene_to_packed(victory_scene)
 
 
 func _on_timer_left_timeout() -> void:

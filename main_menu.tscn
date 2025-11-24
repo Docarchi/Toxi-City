@@ -1,7 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://mmqydtc71d2e"]
+[gd_scene load_steps=8 format=3 uid="uid://mmqydtc71d2e"]
 
 [ext_resource type="Script" uid="uid://duqd1xgjhuv5r" path="res://main_menu.gd" id="1_06t4h"]
 [ext_resource type="AudioStream" uid="uid://cta52o2j4eh4g" path="res://assets/punch-deck-the-soul-crushing-monotony-of-isolation-instrumental-mix(chosic.com).mp3" id="2_7vrkn"]
+[ext_resource type="Texture2D" uid="uid://boj11k6hlkk60" path="res://assets/tiles.png" id="3_fu7sn"]
+
+[sub_resource type="Gradient" id="Gradient_7vrkn"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.301961, 0.301961, 0.301961, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fu7sn"]
+gradient = SubResource("Gradient_7vrkn")
+
+[sub_resource type="Gradient" id="Gradient_fu7sn"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.301961, 0.301961, 0.301961, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_jix8l"]
+gradient = SubResource("Gradient_fu7sn")
 
 [node name="MainMenu" type="MarginContainer"]
 anchors_preset = 15
@@ -47,4 +62,115 @@ text = "Credits"
 stream = ExtResource("2_7vrkn")
 autoplay = true
 
+[node name="Credits" type="TextureRect" parent="."]
+visible = false
+layout_mode = 2
+texture = SubResource("GradientTexture1D_fu7sn")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Credits"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 98.0
+offset_right = 916.0
+offset_bottom = 434.0
+theme_override_constants/separation = 50
+
+[node name="Label" type="Label" parent="Credits/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Game Design and Game Dev 
+Gaspard Fontanille
+
+Music
+Menu : The soul crushing monotony of isolation (Punch Deck)
+Game : Brazilian street fight (Punch Deck)
+
+Icon from Flaticon"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="Credits/VBoxContainer"]
+layout_mode = 2
+
+[node name="B_credits_back" type="Button" parent="Credits/VBoxContainer/CenterContainer"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+text = "Back"
+
+[node name="Rules" type="TextureRect" parent="."]
+visible = false
+layout_mode = 2
+texture = SubResource("GradientTexture1D_jix8l")
+
+[node name="Label" type="Label" parent="Rules"]
+layout_mode = 2
+offset_top = -1.0
+offset_right = 912.0
+offset_bottom = 122.0
+text = "Toxi-City has a big problem. A toxic wave is sweeping through the city. 
+You have to distribute treatments faster than the poison can spread !
+
+The more you resist, the more grateful Toxi-City will be."
+horizontal_alignment = 1
+
+[node name="City_tile" type="Sprite2D" parent="Rules"]
+position = Vector2(214, 170)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("3_fu7sn")
+region_enabled = true
+region_rect = Rect2(0, 0, 264.504, 226.748)
+
+[node name="L_city_tile" type="Label" parent="Rules"]
+layout_mode = 2
+offset_left = 294.0
+offset_top = 155.0
+offset_right = 711.0
+offset_bottom = 177.333
+text = "This is a city tile. You have to keep it safe from poison."
+
+[node name="Toxic_tile" type="Sprite2D" parent="Rules"]
+position = Vector2(214, 267)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("3_fu7sn")
+region_enabled = true
+region_rect = Rect2(267.856, 225.268, 257.682, 225.471)
+
+[node name="L_toxic_tile" type="Label" parent="Rules"]
+layout_mode = 2
+offset_left = 291.0
+offset_top = 247.0
+offset_right = 849.0
+offset_bottom = 294.667
+text = "This is a toxic tile. You can nothing for it. 
+The poison is spreading from it."
+
+[node name="Poison_tile" type="Sprite2D" parent="Rules"]
+position = Vector2(214, 368)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("3_fu7sn")
+region_enabled = true
+region_rect = Rect2(262.769, -1.66788, 257.682, 228.4)
+
+[node name="L_poison_tile" type="Label" parent="Rules"]
+layout_mode = 2
+offset_left = 289.0
+offset_top = 347.0
+offset_right = 847.0
+offset_bottom = 394.667
+text = "This is a poison tile. You have to give a treament by clinking on it.
+The poison is spreading from it."
+
+[node name="B_rules_back" type="Button" parent="Rules"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 0
+offset_left = 332.0
+offset_top = 450.0
+offset_right = 482.0
+offset_bottom = 500.0
+text = "Back"
+
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button3" to="." method="_on_button_3_pressed"]
+[connection signal="pressed" from="Credits/VBoxContainer/CenterContainer/B_credits_back" to="." method="_on_b_credits_back_pressed"]
+[connection signal="pressed" from="Rules/B_rules_back" to="." method="_on_b_rules_back_pressed"]
