@@ -37,7 +37,10 @@ func _input(event: InputEvent) -> void:
 				
 func _process(delta: float) -> void:
 	label_nb_heal.text = str(nb_heal)
-	pb_toxicity.max_value = int(round($map_tiles.get_used_cells().size()*0.75))
+	var nb_cells = $map_tiles.get_used_cells().size()
+	pb_toxicity.max_value = int(round(nb_cells*0.8))
+	p_propagation = 0.6-0.3*nb_cells/220
+	print(p_propagation)
 	var nb_toxic = 0
 	for tile in $map_tiles.get_used_cells():
 		if $map_tiles.get_cell_tile_data(tile).get_custom_data("toxic"):
@@ -75,7 +78,7 @@ func toxi_propagation():
 
 func _on_pb_toxicity_level_value_changed(value: float) -> void:
 	if pb_toxicity.value == pb_toxicity.max_value:
-		$Popup_end/CenterContainer3/Label1.text = final_text[min(final_text.size()-1, round(nb_heal/45))]
+		$Popup_end/CenterContainer3/Label1.text = final_text[min(final_text.size()-1, round(nb_heal/55))]
 		$Toxi_Propagation.stop()
 		label_timer.stop()
 		$Timer_left.stop()
